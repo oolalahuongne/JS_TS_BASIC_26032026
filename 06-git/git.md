@@ -338,3 +338,5 @@ Tài liệu chi tiết cho case nhiều người cùng làm, `main` có code m�
 ```text
 06-git/lesson-07-team-main-update-workflow.md
 ```
+```git ignore
+nói cho git biết những file này đừng theo dõi
