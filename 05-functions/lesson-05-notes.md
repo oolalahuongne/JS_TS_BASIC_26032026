@@ -313,6 +313,7 @@ Scope
   - Khi tìm biến, JavaScript tìm **từ trong ra ngoài**, không bao giờ tìm từ ngoài vào trong.
   - Hàm con nhìn thấy biến của hàm cha.
   - Hàm cha **không** nhìn thấy biến của hàm con.
+<<<<<<< HEAD
 
 Closure la 1 haà ghi nhơ caá bieế xung quanh noơ nó dc sinh ra va gom vào 1 caá balo
 du sau nay cái hàm đó bị mang đi chạy ở nơi khác, nó vẫn xách theo cái balo đó di cùng
@@ -332,3 +333,5 @@ function hamCha() {
 - Hàm lồng trong hàm, hàm con nằm trong hàm cha
 - Hàm con sử dụng biến hàm cha
 - Khi hàm con chạy vẫn truy cập dc biến hàm cha
+=======
+>>>>>>> lessons
