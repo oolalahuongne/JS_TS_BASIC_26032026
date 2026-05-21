@@ -313,3 +313,22 @@ Scope
   - Khi tìm biến, JavaScript tìm **từ trong ra ngoài**, không bao giờ tìm từ ngoài vào trong.
   - Hàm con nhìn thấy biến của hàm cha.
   - Hàm cha **không** nhìn thấy biến của hàm con.
+
+Closure la 1 haà ghi nhơ caá bieế xung quanh noơ nó dc sinh ra va gom vào 1 caá balo
+du sau nay cái hàm đó bị mang đi chạy ở nơi khác, nó vẫn xách theo cái balo đó di cùng
+cú pháp: closure ko có từ khóa riêng, nhận bik qua 3 dấu hiệu:
+
+function hamCha() {
+  //có khai báo biến trong hàm cha
+  let bienRiengTu = 0
+  function hamCon(){
+    bienRiengTu++
+    return bienRiengTu
+  }
+  return hamCon
+}
+
+3 dấu hiệu chính khi nhận biết closure: 
+- Hàm lồng trong hàm, hàm con nằm trong hàm cha
+- Hàm con sử dụng biến hàm cha
+- Khi hàm con chạy vẫn truy cập dc biến hàm cha

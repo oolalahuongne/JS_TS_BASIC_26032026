@@ -249,3 +249,24 @@ config.browser = "firefox";
 console.log(config.browser);
 
 console.log(config.getTimeOut());
+
+class BasePage {
+  constructor() {
+    console.log("trong constructor Cha");
+    
+  }
+}
+
+class BasePageCon extends BasePage {
+  btnLogin = "btnLogin";
+  constructor() {
+    super();
+    console.log("BasePage con chạy riêng", this.btnLogin);
+    
+  }
+}
+
+const basePageCon = new BasePageCon();
+basePageCon.btnLogin;
+
+
