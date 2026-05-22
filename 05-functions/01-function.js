@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //Lý thuyết FUNCTION :
 //1. Function gồm 3 thành phần cốt lõi : 
 //1 input (parameter)
@@ -390,7 +389,6 @@
 // ]
 // Bài toán
 // // Viết hàm taoBaoCaoTest(testRuns) để tạo báo cáo từ danh sách kết quả test.
-=======
 // Hàm này nhận thông tin đăng nhập từ bên ngoài qua tham số.
 // Có thể hiểu tham số như "chỗ chờ sẵn" để nhận dữ liệu khi gọi hàm.
 /**
@@ -938,7 +936,6 @@ const testRuns = [
 // // Bài toán
 // // Viết hàm taoBaoCaoTest(testRuns) để tạo báo cáo từ danh sách kết quả test.
 
->>>>>>> lessons
 // // Yêu cầu
 // // - Dùng destructuring để bóc tách từng phần tử trong mảng.
 // // - Gợi ý:
@@ -947,10 +944,7 @@ const testRuns = [
 // //   + rawTestName: tên test thô
 // //   + { browser, env }: thông tin môi trường chạy
 // //   + rawStatus: trạng thái test thô
-<<<<<<< HEAD
-=======
 
->>>>>>> lessons
 // // Rule xử lý
 // // - Nếu testName rỗng thì tăng invalid và bỏ qua dòng đó.
 // // - Nếu status không phải PASS hoặc FAIL thì tăng invalid và bỏ qua.
@@ -959,7 +953,6 @@ const testRuns = [
 // //   + Ví dụ: login smoke - chromium - staging
 // //   + Nếu PASS thì đưa vào mảng passed.
 // //   + Nếu FAIL thì đưa vào mảng failed.
-<<<<<<< HEAD
 // // Kết quả mong đợi
 // // Hàm cần trả về dữ liệu theo dạng:
 // // {
@@ -967,7 +960,6 @@ const testRuns = [
 // //   invalid: 1,
 // //   passed: [
 // //     "login smoke - chromium - staging"
-=======
 
 // // Kết quả mong đợi
 // // Hàm cần trả về dữ liệu theo dạng:
@@ -977,13 +969,11 @@ const testRuns = [
 // //   passed: [
 // //     "login smoke - chromium - staging",
 // //     "search product - webkit - staging"
->>>>>>> lessons
 // //   ],
 // //   failed: [
 // //     "checkout payment - firefox - prod"
 // //   ]
 // // }
-<<<<<<< HEAD
 
 
 // const testRuns = [
@@ -1041,7 +1031,6 @@ const testRuns = [
 // } else {
 //     console.log("failed");
 // }
-=======
 function taoBaoCaoTest(testRuns) {
   //khai báo các biến cần sử dụng
   const passed = [];
@@ -1496,4 +1485,3 @@ const testerUser = usersTest.find((user) => user.role === "tester");
 //   return user.role === "admin";
 // });
 // console.log(userAdmin);
->>>>>>> lessons

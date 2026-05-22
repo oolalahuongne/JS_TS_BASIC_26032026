@@ -400,7 +400,7 @@ function chuanHoaDanhSachTest(rawRows, config = {}) {
     }
 }
 }
-console.log(chuanHoaDanhSachTest(rawRows, testCaseConfig));
+console.log("Bài 2", chuanHoaDanhSachTest(rawRows, testCaseConfig));
 
 
 // ## Bài 3: Merge config chạy test và bắt lỗi cấu hình
@@ -657,34 +657,6 @@ allCases.forEach((configCase, index) => {
     console.log(kiemTraCauHinh(finalConfig));
 });
 
-// 4. Hàm `kiemTraCauHinh()` phải trả về:
-
-// ```javascript
-// {
-//     errors: [],
-//     warnings: []
-// }
-// ```
-
-// - Không bắt buộc đúng từng câu chữ của `errors` và `warnings`.
-// - Chỉ cần phân biệt đúng lỗi nào đưa vào `errors`, cảnh báo nào đưa vào `warnings`.
-// - Có thể dùng câu ngắn gọn, dễ hiểu.
-
-// ### Luật kiểm tra
-
-// - `baseUrl` phải bắt đầu bằng `http://` hoặc `https://`
-// - `timeout` phải từ `1000` trở lên
-// - `retries` không được âm
-// - `browsers` không được rỗng
-// - không được có browser trùng sau khi đã `trim` và đưa về lowercase
-// - nếu `env === "ci"` mà `headed === true` -> warning
-// - nếu `baseUrl` chứa `"prod"` nhưng `env !== "production"` -> warning
-
-// ### Điều bắt buộc
-
-// 1. Không được sửa trực tiếp bất kỳ config đầu vào nào.
-// 2. Dùng object destructuring ít nhất 1 lần.
-// 3. Dùng `map`, `filter`, `find` ở phần xử lý `browsers`."
 
 
 // ## Bài 4: Phân tích kết quả chạy test có chạy lại
@@ -829,8 +801,187 @@ const results = [
 // 2. Không dùng biến global để cộng dồn phần tổng kết.
 // 3. Giữ bài này trong 1 hàm chính `phanTichKetQuaChay(results, options)`.
 
+function phanTichKetQuaChay(results, options) {
+    const analyzed = [];
+    const invalid = [];
+    let passed = 0;
+    let failed = 0;
+    let flaky = 0;
+    let slow = 0;
+    let invalidCount = 0;
+    const {slowThreshold = 2500} = options;
 
+    for (const result of results) {
+        const {id, module, statuses, durations, owner} = result;
+        
+        const isInvalid = (id === "" || statuses.length !== durations.length || durations.some(duration => duration < 0));
+        if (isInvalid) {
+            invalid.push(result);
+            invalidCount++;
+            continue;
+        }
 
+        const finalStatus = statuses[statuses.length - 1];
+        const retryCount = statuses.length - 1;
+        const totalDuration = durations.reduce((total, duration)=> total + duration);
+        const isFlaky = statuses.includes("fail") && finalStatus === "pass";
+        const isSlow = totalDuration > slowThreshold;
+
+         const analyzedTestCase = {
+            finalStatus,
+            retryCount,
+            totalDuration,
+            isFlaky,
+            isSlow
+        }
+        analyzed.push(analyzedTestCase);
+
+        if (finalStatus === "pass"){
+            passed++;
+        } else {
+            failed++;
+        }
+
+        if (isFlaky){
+            flaky++;
+        }
+
+        if (isSlow){
+            slow++;
+        }
+    }
+    return {
+        analyzed,
+        invalid,
+        summary: {
+            total: results.length,
+            passed,
+            failed,
+            flaky,
+            slow,
+            invalid: invalidCount
+        }
+    }
+}
+console.log("Bài 4", phanTichKetQuaChay(results, resultOptions));
+
+// ## Bài 5: Lọc danh sách test cần chạy lại bằng `map`, `filter`, `find`
+
+// ### Bối cảnh thực tế
+
+// Sau một lượt chạy regression, team thường phải chốt rất nhanh:
+
+// - test nào cần chạy lại
+// - test nào thiếu owner để giao người xử lý
+// - test fail mức độ ưu tiên cao đầu tiên là test nào
+// - dữ liệu trả về có đang bị thừa khoảng trắng hoặc viết hoa viết thường lung tung không
+
+// ### Đề bài
+
+// Viết hàm:
+
+// ```javascript
+// function locDanhSachChayLai(rawRuns)
+
+// ### Bộ data test dùng để làm bài
+
+const rawRuns = [
+    { id: " tc_login_001 ", module: " login ", status: " FAIL ", owner: "an", priority: 1, enabled: true },
+    { id: "TC_SEARCH_002", module: "search", status: "pass", owner: "binh", priority: 2, enabled: true },
+    { id: " tc_cart_003 ", module: " cart ", status: " flaky ", owner: " chi ", priority: 1, enabled: true },
+    { id: "TC_PAY_004", module: "payment", status: "fail", owner: "", priority: 1, enabled: true },
+    { id: " TC_USER_005 ", module: " user ", status: " skip ", owner: "duy", priority: 3, enabled: true },
+    { id: "TC_REPORT_006", module: "report", status: "fail", owner: "ha", priority: 2, enabled: false },
+    { id: " ", module: "api", status: "fail", owner: "linh", priority: 1, enabled: true },
+    { id: "TC_SYNC_007", module: " sync ", status: " FAIL ", owner: " minh ", priority: 2, enabled: true },
+    { id: "TC_BILL_008", module: "billing", status: "pass", owner: "", priority: 1, enabled: true },
+    { id: "TC_ORDER_009", module: " order ", status: " flaky ", owner: "nam", priority: 2, enabled: true }
+];
+
+// Khi làm với bộ data test này:
+
+// - `rawRuns` nhận trực tiếp mảng `rawRuns` ở trên
+// - Ví dụ gọi hàm: `locDanhSachChayLai(rawRuns)`
+
+// ### Yêu cầu
+
+// 1. Dùng `map` để tạo `normalizedRuns`.
+// 2. Trong từng phần tử của `normalizedRuns`, chuẩn hóa dữ liệu:
+//    - `id` -> trim, uppercase
+//    - `module` -> trim, lowercase
+//    - `status` -> trim, lowercase
+//    - `owner` -> trim
+//    - giữ nguyên `priority`, `enabled`
+// 3. Dùng `filter` để tạo `rerunList`. Một test cần chạy lại khi:
+//    - `enabled === true`
+//    - `id` không rỗng
+//    - `status` là `fail` hoặc `flaky`
+// 4. Dùng `filter` để tạo `missingOwnerList`. Chỉ lấy các test:
+//    - `enabled === true`
+//    - `id` không rỗng
+//    - `owner === ""`
+// 5. Dùng `find` để tạo `firstCriticalCase`. Đây là test đầu tiên thỏa:
+//    - `enabled === true`
+//    - `id` không rỗng
+//    - `priority === 1`
+//    - `status === "fail"`
+// 6. Hàm phải `return` object có dạng:
+
+// ```javascript
+// {
+//     normalizedRuns: [...],
+//     rerunList: [...],
+//     missingOwnerList: [...],
+//     firstCriticalCase: { ... } // hoặc null nếu không có
+// }
+// ```
+
+// ### Điều bắt buộc
+
+// 1. Dùng object destructuring khi đọc từng phần tử bên trong `map`.
+// 2. Giữ bài này trong 1 hàm chính `locDanhSachChayLai(rawRuns)`.
+// 3. Không được sửa trực tiếp `rawRuns`.
+// 4. Không dùng `for` cho phần xử lý chính của bài này.
+
+function locDanhSachChayLai(rawRuns) {
+    const normalizedRuns = rawRuns.map((rawRun) => {
+        let {id, module, status, owner, priority, enabled} = rawRun;
+         id = id.trim().toUpperCase();
+         module = module.trim().toLowerCase();
+         status = status.trim().toLowerCase();
+         owner = owner.trim();
+
+         return {
+            id,
+            module,
+            status,
+            owner,
+            priority,
+            enabled
+         }
+    })
+   
+    const rerunList = normalizedRuns.filter(({enabled, status, id}) => {
+       return enabled === true && id !== "" && (status === "fail" || status === "flaky")
+    })
+
+    const missingOwnerList = normalizedRuns.filter(({enabled, id, owner}) => {
+        return enabled === true && id !== "" && owner === ""
+    })
+
+    const firstCriticalCase = normalizedRuns.find(({enabled, id, priority, status}) => {
+        return enabled === true && id !== "" && priority === 1 && status === "fail"
+    })
+
+    return {
+        normalizedRuns,
+        rerunList,
+        missingOwnerList,
+        firstCriticalCase 
+    }
+
+}
+console.log("Bài 5", locDanhSachChayLai(rawRuns));
 
 
 
