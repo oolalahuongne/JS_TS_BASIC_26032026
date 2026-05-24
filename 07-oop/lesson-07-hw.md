@@ -1,4 +1,4 @@
-### Bài 5: Quản lý danh sách sản phẩm
+### Bài 1: Quản lý danh sách sản phẩm
 
 Tạo class cha `ProductStore` với private field `#products = []`.
 
@@ -111,7 +111,7 @@ Kết quả mong đợi:
 }
 ```
 
-### Bài 6: Giỏ hàng có mã giảm giá
+### Bài 2: Giỏ hàng có mã giảm giá
 
 Tạo class cha `Cart` với private field `#items = []`.
 
