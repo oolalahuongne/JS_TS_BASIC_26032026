@@ -109,41 +109,56 @@ const tenPromise = new Promise((resolve, reject) => {
 - Đầu ra của `new Promise(...)` là một Promise.
 - Chúng ta sẽ dùng `.then()` hoặc `.catch()` để đón kết quả từ Promise.
 
-Giá trị truyền vào resolve(), reject() sẽ tự động chảy ra thành tham số đầu vào cho .then() hoăck catch()
+- Giá trị truyền vào `resolve()` hoặc `reject()` sẽ tự động trở thành tham số đầu vào cho `.then()` hoặc `.catch()`.
+- Đây chính là cầu nối dữ liệu giúp dữ liệu luân chuyển xuyên suốt Promise.
+- `resolve()` và `reject()` chỉ nhận đúng một giá trị. Giá trị đó có thể là bất kỳ kiểu dữ liệu nào.
 
-.Đâ chính là cầu nối dữ liệu giúp luôn chuyển xuyên suốt promise
-resolve() và reject() chỉ nhận đúng 1 giá trị, giá trị đó có thể là
+### Chaining (xâu chuỗi): Khi các `.then()` truyền dữ liệu cho nhau
 
-Chaining (xâu chuỗi) - Khi then() truyền dữ liệu cho nhau
+- Nếu bên trong `.then()` `return` một giá trị, giá trị đó sẽ tự động trở thành đầu vào cho `.then()` tiếp theo trong chuỗi.
+- Dữ liệu cứ thế chảy từ bước này sang bước khác.
 
-nếu bên trong then() return 1 giá trị -> giá trị đó sẽ tự động trở thành đầu vào cho .then() khác tiếp theo trong chuỗi
-Dữ liệu cứ thế chảy từ bước này sang bước khác
+### Các cách bắt lỗi với `.catch()` và `reject()`
 
-Các cách bắt lỗi (catch reject)
-Khi 1 promise bị reject() -> Js sẽ tìm chỗ xử lý lỗi gần nhất
-có 3 cách
-c1: catch() ở cuối chuỗi (hay dùng nhât)
-bắt lỗi từ bất kfi trhen() nào phía trên văn lỗi
-c2: Mình có thể dùng catch() khi dùng then() 2 tham số (ít dùng)
-c3L catch() xen giữa chuối (NÂNG CAO) -> bắt lỗi từng bước , xử lý xong rồi chạy tiếp
-setTimeout()
-cú pháp setTimeout(callBack, delay)
-=> trả về id số nguyên có thể hủy hẹn giờ nếu cần
+- Khi một Promise bị `reject()`, JavaScript sẽ tìm nơi xử lý lỗi gần nhất.
+- Có 3 cách bắt lỗi:
+  1. Dùng `.catch()` ở cuối chuỗi:
+     - Đây là cách hay dùng nhất.
+     - Bắt lỗi từ bất kỳ `.then()` nào phía trên bị lỗi.
 
-async/await -> cứu tinh
--> là 1 lớp vỏ bọc của promise và then() -> tác dụng viết code dễ nhìn hơn thôi
-->warp () lên trên thằng primise và then() -> để viết code đẹpk hơn và thuận tiện hơn
+  2. Dùng `.then()` với 2 tham số:
+     - Cách này ít dùng hơn.
 
-sẽ có 2 từ khóa
-1 async -> biến 1 thàm thường thành 1 h àm bất đồng bộ
+  3. Dùng `.catch()` xen giữa chuỗi:
+     - Đây là cách nâng cao.
+     - Dùng để bắt lỗi từng bước, xử lý xong rồi cho chuỗi chạy tiếp.
 
--> làm cho hàm đó ochacs chắn 100% là sẽ trả về 1 promise -> dù mình có return 1 giá trị bình tường.
-JS sẽ tự động bọc nó trong PROMISE.resolve()
--> bên trong hàm ta có quyền sử dụng từ await
+### `setTimeout()`
 
-await -
-đặt await trước lệnh trả về promise -> nó sẽ
+- Cú pháp:
 
-tạm dừng dòng code bên trong hàm async -> chờ promise hoàn tất
-trả về giá tị mà promise resolve() -> có thể gán thẳng vào biến
-ko làm đóng băng hệ thống
+  ```js
+  setTimeout(callback, delay);
+  ```
+
+- `setTimeout()` trả về một ID số nguyên, có thể dùng để hủy hẹn giờ nếu cần.
+
+### `async/await`: Cứu tinh khi làm việc với Promise
+
+- `async/await` là một lớp cú pháp bọc bên ngoài Promise và `.then()`.
+- Tác dụng chính là giúp code dễ đọc, dễ viết và thuận tiện hơn.
+
+#### `async`
+
+- `async` biến một hàm thường thành một hàm bất đồng bộ.
+- Hàm có `async` chắc chắn 100% sẽ trả về một Promise, dù bên trong `return` một giá trị bình thường.
+- JavaScript sẽ tự động bọc giá trị trả về bằng `Promise.resolve()`.
+- Bên trong hàm `async`, ta có quyền sử dụng từ khóa `await`.
+
+#### `await`
+
+- Đặt `await` trước một lệnh trả về Promise.
+- `await` sẽ:
+  - Tạm dừng dòng code bên trong hàm `async` để chờ Promise hoàn tất.
+  - Trả về giá trị mà Promise đã `resolve()`, nên có thể gán thẳng vào biến.
+  - Không làm đóng băng toàn bộ hệ thống.
